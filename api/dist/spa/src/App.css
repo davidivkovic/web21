@@ -1,0 +1,35 @@
+  
+@font-face {
+	font-family: "Inter";
+	src: url("/src/assets/fonts/Inter.var.woff2")
+			format("woff2 supports variations"),
+		url("/src/assets/fonts/Inter.var.woff2") format("woff2-variations");
+	font-weight: 100 1000;
+	font-display: swap;
+}
+html {
+	overflow: -moz-scrollbars-vertical;
+	overflow-y: scroll;
+}
+body {
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	font-family: "Inter", sans-serif;
+	overflow-x: hidden;
+}
+svg path {
+	stroke-width: 1.5;
+}
+::-webkit-scrollbar {
+	background-color: #fafafa;
+	width: 15px;
+}
+::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+	background-color: #c2c2c2;
+	border-radius: 16px;
+	border: 4px solid transparent;
+	background-clip: padding-box;
+}
