@@ -1,0 +1,19 @@
+  
+/* placeholder text style */
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+	color: #9ca3af;
+}
+
+/* regular text style */
+input[type="date"].date-input--has-value::-webkit-datetime-edit-text,
+input[type="date"].date-input--has-value::-webkit-datetime-edit-month-field,
+input[type="date"].date-input--has-value::-webkit-datetime-edit-day-field,
+input[type="date"].date-input--has-value::-webkit-datetime-edit-year-field {
+	color: black;
+}
+input[type="date"] label {
+	color: red;
+}
