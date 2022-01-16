@@ -13,6 +13,11 @@ public class Friendship extends Entity
         isCurrent = true;
     }
 
+    public void makeCurrent()
+    {
+        isCurrent = true;
+    }
+
     public void cancel()
     {
         isCurrent = false;

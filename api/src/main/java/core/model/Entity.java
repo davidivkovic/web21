@@ -42,4 +42,9 @@ public class Entity extends Object
         if (obj == null) return false;
         return id.equals(((Entity)obj).getId());
     }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

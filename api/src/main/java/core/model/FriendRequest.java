@@ -24,6 +24,13 @@ public class FriendRequest extends Entity
         status = Status.Pending;
     }
 
+    public boolean isBetween(User a, User b)
+    {
+        if(a == null || b == null) return false;
+        return (sender.equals(a) && recipient.equals(b)) ||
+               (sender.equals(b) && recipient.equals(a));
+    }
+
     public void accept()
     {
         status = Status.Accepted;

@@ -38,11 +38,28 @@ public class Conversation extends Entity
 
     public void read(User user)
     {
-        seenPointer = messages.stream()
-        .filter(m -> !m.getSender().equals(user))
-        .reduce((first, second) -> second)
-        .get()
-        .getId();
+        /* 
+
+        ako je seen ptr na mojoj poruci onda nemoj da ga apdejtujes
+        ako nije na mojoj poruci gurni ga na njegovu poslednju
+
+            Ako seen ptr nije na mojoj poslednjoj poruci
+            onda je na njegovoj poslednjoj poruci
+
+        */
+
+        boolean seenPtrIsOnMe = messages.stream()
+        .filter(m -> m.getSender().equals(user))
+        .anyMatch(m -> m.getId().equals(seenPointer));
+
+        if (!seenPtrIsOnMe) 
+        {
+            seenPointer = messages.stream()
+            .filter(m -> !m.getSender().equals(user))
+            .map(m -> m.getId())
+            .reduce((first, second) -> second)
+            .orElse(seenPointer);
+        }
     }
 
     public List<User> getOtherMembers(User user)
@@ -62,6 +79,11 @@ public class Conversation extends Entity
     public UUID getSeenPointer() 
     {
         return seenPointer;
+    }
+
+    public void setSeenPointer(UUID messageID)
+    {
+        seenPointer = messageID;
     }
 
     public List<User> getMembers() 
