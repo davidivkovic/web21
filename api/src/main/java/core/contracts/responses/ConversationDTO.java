@@ -1,58 +1,64 @@
 package core.contracts.responses;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import core.model.*;
+import core.model.User.Role;
 
 public class ConversationDTO
 {
-    private transient Conversation conversation;
+    public transient Conversation conversation;
 
     public UUID id;
-    public UUID seenPointer;
-    public String lastMessageAt;
+    public String seenPointer = "";
     public boolean hasUnread;
     public boolean byAdmin;
 
-    public List<UserDTO> members;
-    public List<MessageDTO> messages;
+    public UserDTO sender;
+    public UserDTO recipient;
+
+    public List<OutboundChatMessageDTO> messages;
 
     public ConversationDTO(Conversation c, User viewer) 
     {
         conversation = c;
         id = c.getId();
-        seenPointer = c.getSeenPointer();
-        lastMessageAt = c.getLastMessageAt().toString();
+
+        if (c.getSeenPointer() != null) {
+            seenPointer = c.getSeenPointer().toString();
+        }
+
         byAdmin = c.getMembers().stream()
         .filter(m -> !m.equals(viewer))
+        .filter(m -> m.getRole().equals(Role.Admin))
         .findAny()
         .isPresent();
-        //  viewer.getRole().equals(Role.Admin);
 
-        Message lastMessage = c.getMessages().stream()
+        Message newestMessage = c.getMessages().stream()
         .sorted((m1, m2) -> m2.getSentAt().compareTo(m1.getSentAt()))
         .findFirst()
-        .get();
+        .orElse(null);
 
-        hasUnread = !seenPointer.equals(lastMessage.getId()) &&
-                    !lastMessage.getSender().equals(viewer);
+        if(newestMessage != null)
+        {   
+            hasUnread = !newestMessage.getId().toString().equals(seenPointer) &&
+            !newestMessage.getSender().equals(viewer);
+        }
 
-        members = c.getMembers()
+        sender = new UserDTO(viewer);
+        recipient = c.getOtherMembers(viewer)
             .stream()
             .map(u -> new UserDTO(u))
+            .findFirst()
+            .get();
+
+        messages = c.getMessages()
+            .stream()
+            .sorted((m1, m2) -> m2.getSentAt().compareTo(m1.getSentAt()))
+            .limit(15)
+            .map(m -> new OutboundChatMessageDTO(m, c.getId(), (byte) 0))
             .collect(Collectors.toList());
-    }
-
-    public ConversationDTO includeMessages()
-    {
-        messages = conversation.getMessages()
-        .stream()
-        .map(m -> new MessageDTO(m))
-        .collect(Collectors.toList());
-
-        return this;
     }
 }

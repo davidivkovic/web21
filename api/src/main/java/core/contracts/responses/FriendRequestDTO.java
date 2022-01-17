@@ -9,14 +9,18 @@ public class FriendRequestDTO
 {
     public UUID id;
     public String timestamp;
-    public Status status;
+    public boolean isAccepted;
+    public boolean isRejected;
+    public boolean isPending;
     public UserDTO sender;
 
     public FriendRequestDTO(FriendRequest f) 
     {
         id = f.getId();
         timestamp = f.getTimestamp().toString();
-        status = f.getStatus();
-        sender = new UserDTO(f.getSender());
+        isAccepted = f.getStatus().equals(Status.Accepted);
+        isRejected = f.getStatus().equals(Status.Rejected);
+        isPending = f.getStatus().equals(Status.Pending);
+        sender = new UserDTO(f.getSender()).noNonce();
     }
 }
