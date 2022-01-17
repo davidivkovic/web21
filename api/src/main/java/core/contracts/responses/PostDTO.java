@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.ws.rs.core.UriBuilder;
 
+import context.ContextHelper;
 import controllers.PostsController;
 import core.model.Post;
 
@@ -26,14 +27,17 @@ public class PostDTO
         timestamp = p.getTimestamp().toString();
         poster = new UserDTO(p.getPoster());
 
-        imageURL = "http://localhost:8080/api" + UriBuilder
+        imageURL = ContextHelper.getInstance().getBaseUrl() + UriBuilder
         .fromResource(PostsController.class)
         .path(PostsController.class, "getImage")
         .resolveTemplate("id", p.getId())
         .build()
-        .toString();
+        .toString()
+        .substring(1);
 
         comments = p.getComments().stream()
+        .filter(c -> c != null)
+        .filter(c -> c.isActive())
         .map(c -> new CommentDTO(c))
         .collect(Collectors.toList());
 

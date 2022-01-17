@@ -29,7 +29,7 @@ public class User extends Entity
     private boolean isBanned;
     
     public User(String username, String password, String email,
-                String fullName, String lastName, LocalDate dateOfBirth,
+                String fullName, LocalDate dateOfBirth,
                 Gender gender, boolean isPrivate) 
     {
         this.username = username;
@@ -152,5 +152,15 @@ public class User extends Entity
     public boolean getIsBanned()
     {
         return isBanned;
+    }
+
+    public String getFirstName()
+    {
+        return fullName.split(" ")[0];
+    }
+
+    public String getLastName()
+    {
+        return fullName.split(" ")[1];
     }
 }

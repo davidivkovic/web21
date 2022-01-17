@@ -3,15 +3,18 @@ package core.contracts.responses;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.ws.rs.core.UriBuilder;
 
+import context.ContextHelper;
 import controllers.UserController;
 import core.model.User;
 import core.model.User.Role;
 
 public class UserDTO 
 {   
+    public transient User user;
     public UUID id;
     public String username;
     public String fullName;
@@ -33,8 +36,11 @@ public class UserDTO
     public List<UserDTO> friends;
     public List<UserDTO> mutualFriends;
 
+    public boolean isSuggestion;
+
     public UserDTO(User u)
     {
+        user = u;
         id = u.getId();
         username = u.getUsername();
         fullName = u.getFullName();
@@ -46,17 +52,31 @@ public class UserDTO
         friends = new ArrayList<>();
         mutualFriends = new ArrayList<>();
 
-        imageURL = "http://localhost:8080/api" + UriBuilder
+        imageURL = ContextHelper.getInstance().getBaseUrl() + UriBuilder
         .fromResource(UserController.class)
         .path(UserController.class, "getProfileImage")
         .resolveTemplate("username", username)
         .build()
-        .toString();
+        .toString()
+        .substring(1) + "?nonce=" + ThreadLocalRandom.current().nextInt();
 
         isPrivate = u.isPrivate();
         isBanned = u.getIsBanned();
         isAdmin = u.getRole().equals(Role.Admin);
         isFriend = false;
+        isSuggestion = false;
+    }
+
+    public UserDTO noNonce()
+    {
+        imageURL = imageURL.split("\\?nonce=")[0];
+        return this;
+    }
+
+    public UserDTO includeFriendRequest(FriendRequestDTO request)
+    {
+        friendRequest = request;
+        return this;
     }
 
     public UserDTO includeFriendsCount(int count)

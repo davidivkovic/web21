@@ -10,15 +10,19 @@ public class OutboundChatMessageDTO
     public transient List<UUID> recipientIds;
 
     public String content;
+    public UUID id;
     public UUID conversationId;
     public UUID senderId;
-    public String timestamp;
+    public String sentAt;
+    public byte type;
 
-    public OutboundChatMessageDTO(Message m) 
+    public OutboundChatMessageDTO(Message m, UUID conversationID, byte type) 
     {
+        this.type = type;
+        conversationId = conversationID;
+        id = m.getId();
         content = m.getContent();
-        conversationId = m.getId();
         senderId = m.getSender().getId();
-        timestamp = m.getSentAt().toString();
+        sentAt = m.getSentAt().toString();
     }
 }
