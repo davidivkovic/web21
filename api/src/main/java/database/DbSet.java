@@ -9,19 +9,23 @@ import java.util.stream.Stream;
 
 import core.model.Entity;
 
-public class DbSet<T extends Entity> {
+public class DbSet<T extends Entity> 
+{
 
     private Map<UUID, T> entities = new HashMap<>();
 
-    public void init(List<T> list) {
+    public void init(List<T> list) 
+    {
         addOrUpdateRange(list);
     }
 
-    protected void addOrUpdateRange(List<T> entities) {
+    protected void addOrUpdateRange(List<T> entities) 
+    {
         entities.stream().forEach(this::addOrUpdate);
     }
 
-    protected void addOrUpdate(T entity) {
+    protected void addOrUpdate(T entity) 
+    {
         entities.put(entity.getId(), entity);
     }
 
@@ -30,13 +34,15 @@ public class DbSet<T extends Entity> {
         entities.remove(entity.getId());
     }
 
-    public T find(UUID id) {
+    public T find(UUID id) 
+    {
         T entity = entities.get(id);
         if (entity != null && entity.isActive()) return entity;
         return null;
     }
 
-    public Stream<T> toStream() {
+    public Stream<T> toStream() 
+    {
         return entities.values().stream().filter(e -> e.isActive());
     }
 

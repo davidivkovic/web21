@@ -35,8 +35,8 @@ public class DbContext
 
     public DbSet<User> users = new DbSet<>();
     public DbSet<Friendship> friendships = new DbSet<>();
-    public DbSet<Post> posts = new DbSet<>();
     public DbSet<Comment> comments = new DbSet<>();
+    public DbSet<Post> posts = new DbSet<>();
     public DbSet<FriendRequest> friendRequests = new DbSet<>();
     public DbSet<Conversation> conversations = new DbSet<>();
     public DbSet<Message> messages = new DbSet<>();
@@ -45,8 +45,8 @@ public class DbContext
     private void registerDbSets() 
     {
         dbSets.put(User.class, users);
-        dbSets.put(Post.class, posts);
         dbSets.put(Comment.class, comments);
+        dbSets.put(Post.class, posts);
         dbSets.put(FriendRequest.class, friendRequests);
         dbSets.put(Conversation.class, conversations);
         dbSets.put(Message.class, messages);
@@ -127,7 +127,7 @@ public class DbContext
             field.setAccessible(true);
             List<? extends Entity> entities = (List<? extends Entity>)field.get(entity);
 
-            if(entities == null || entities.isEmpty()) return;
+            if(entities == null || entities.isEmpty() || entities.get(0) == null) return;
             
             Class<?> clazz = entities.get(0).getClass();
             List<T> realEntities = (List<T>) entities.stream()
@@ -165,9 +165,9 @@ public class DbContext
         return success;
     }
 
-    public boolean addOrUpdateRange(Entity ...entities) 
+    public boolean addOrUpdateRange(List<Entity> entities) 
     {
-        return Stream.of(entities).allMatch(this::addOrUpdate);
+        return entities.stream().allMatch(this::addOrUpdate);
     }
 
     private <T extends Entity> List<T> load(Class<T> clazz) 
@@ -184,7 +184,6 @@ public class DbContext
             for (Path p : paths.filter(p -> p.toFile().isFile()).collect(Collectors.toList())) 
             {
                 String json = new String(Files.readAllBytes(p));
-                System.out.println(json);
                 T entity = gson.fromJson(json, clazz);
                 
                 if(entity != null) 
