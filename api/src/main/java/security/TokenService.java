@@ -68,7 +68,7 @@ public class TokenService
         .setSubject(user.getId().toString())
         .setIssuer("api.example.com")
         .setIssuedAt(new Date())
-        .setExpiration(Date.from(LocalDateTime.now().plusMinutes(150000).atZone(ZoneId.systemDefault()).toInstant()))
+        .setExpiration(Date.from(LocalDateTime.now().plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant()))
         .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
         .compact();
     }
@@ -83,7 +83,6 @@ public class TokenService
         }
         catch(Exception e)
         {
-            e.printStackTrace();
             return null;
         }
         

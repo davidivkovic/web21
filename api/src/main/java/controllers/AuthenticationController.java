@@ -1,7 +1,10 @@
 package controllers;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -10,10 +13,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
+import core.contracts.requests.PasswordChangeDTO;
 import core.contracts.requests.RegistrationDTO;
 import core.contracts.requests.SignInRequestDTO;
 import core.contracts.responses.AccessTokenDTO;
@@ -26,6 +31,7 @@ import core.model.User;
 
 import database.DbContext;
 import io.swagger.annotations.Api;
+import security.Authorize;
 import security.TokenService;
 
 @Api(tags = "Authentication")
@@ -35,6 +41,7 @@ public class AuthenticationController extends ControllerBase
     @Inject DbContext context;
     @Inject UserQueries userQueries;
     @Inject TokenService tokenService;
+    @Context UriInfo uriInfo;
 
     @POST
     @Path("/register")
@@ -97,28 +104,48 @@ public class AuthenticationController extends ControllerBase
             return badRequest("Sorry, your password was incorrect. Please double-check your password.");
         }
 
+        if (foundUser.getIsBanned())
+        {
+            return badRequest("Your user account has been banned by our administrators.");
+        }
+
         String accessToken = tokenService.generateAccesToken(foundUser);
         RefreshToken refreshToken = tokenService.generateRefreshToken(foundUser);
-        
-        NewCookie cookie = new NewCookie(
-            "refresh-token",
-            refreshToken.toString(),
-            "/",
-            "localhost",
-            null,
-            (int) Duration.between(refreshToken.getExpires(), LocalDateTime.now()).getSeconds(),
-            false,
-            true
-        ); 
 
         Object response = new SignInResponseDTO(new UserDTO(foundUser), accessToken);
 
-        return Response.ok(response).cookie(cookie).build();
+        return Response.ok(response)
+        .header(
+            "Set-Cookie",
+            "refresh-token=" +
+            refreshToken.toString() +
+            ";Path=/;HttpOnly;Expires=" +
+            DateTimeFormatter.RFC_1123_DATE_TIME.format(
+                refreshToken.getExpires().atOffset(ZoneOffset.UTC)
+            )
+        )
+        .build();
+    }
+
+    @POST
+    @Authorize
+    @Path("/sign-out")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response signOut(@CookieParam("refresh-token") String refreshToken)
+    {
+        tokenService.revokeRefreshToken(refreshToken);
+        return Response.ok().header(
+            "Set-Cookie",
+            "refresh-token=;Path=/;HttpOnly;MaxAge=0;Expires=" + 
+            DateTimeFormatter.RFC_1123_DATE_TIME.format(
+                OffsetDateTime.ofInstant(Instant.EPOCH, ZoneOffset.UTC)
+            )
+        ).build();
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/token-refresh")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response tokenRefresh(@CookieParam("refresh-token") String refreshToken)
     {
         UUID parsedToken = null; 
@@ -148,5 +175,31 @@ public class AuthenticationController extends ControllerBase
         return ok(new AccessTokenDTO(token));
     }
 
-    //@CookieParam("refresh-token") String 
+	@POST
+    @Path("/change-password")
+    @Authorize
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response changePassword(PasswordChangeDTO request) 
+	{
+		User user = authenticatedUser();
+		if (user == null) 
+		{
+			return badRequest();
+		}
+
+		if (!user.getPassword().equals(request.oldPassword)) 
+		{
+			return badRequest("Your old password is incorrect.");
+		}
+
+		if (StringUtils.isNullOrEmpty(request.newPassword))
+        {
+            return badRequest("This password is too easy to guess. Please create a new one.");
+        }
+
+		user.changePassword(request.newPassword);
+		context.addOrUpdate(user);
+
+		return ok();
+	}
 }
