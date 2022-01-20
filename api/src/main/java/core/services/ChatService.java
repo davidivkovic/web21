@@ -39,12 +39,28 @@ public class ChatService
     {
         User sender = context.users.find(senderId);
         Conversation convo = context.conversations.find(inbound.conversationId);
-        Message message = convo.sendMessage(sender, inbound.content);
+        Message message = null;
+        /* 
+          determine type of message, seen or content
+          new_text_message = 0
+          seen_pointer_increment = 1
+        */
+        if (inbound.type == 0) 
+        {
+            message = convo.sendMessage(sender, inbound.content);
+            context.addOrUpdate(message);
+        }
+        else if (inbound.type == 1)
+        {
+            message = new Message(sender, inbound.content);
+            UUID messageId = UUID.fromString(inbound.content);
+            message.setId(messageId);
+            convo.setSeenPointer(messageId);
+        }
 
-        context.addOrUpdate(message);
         context.addOrUpdate(convo);
 
-        OutboundChatMessageDTO outbound = new OutboundChatMessageDTO(message);
+        OutboundChatMessageDTO outbound = new OutboundChatMessageDTO(message, convo.getId(), inbound.type);
         outbound.recipientIds = convo.getOtherMembers(sender)
         .stream()
         .map(u -> u.getId())

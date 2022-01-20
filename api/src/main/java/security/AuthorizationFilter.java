@@ -95,7 +95,6 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
     private boolean checkPermissions(User user, List<Role> allowedRoles) 
     {
-        allowedRoles.stream().forEach(r -> System.out.println(r));
         return allowedRoles.contains(user.getRole());
     }
 }
