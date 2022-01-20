@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.websocket.CloseReason;
-// import javax.websocket.OnClose;
+import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
@@ -15,6 +15,7 @@ import javax.websocket.server.ServerEndpoint;
 import com.google.gson.Gson;
 
 import core.contracts.requests.InboundChatMessageDTO;
+import core.contracts.responses.NotificationDTO;
 import core.contracts.responses.OutboundChatMessageDTO;
 import core.model.User;
 import core.services.ChatService;
@@ -44,6 +45,12 @@ public class ChatController
         instance = this;
     }
 
+    @OnClose
+    public void onClose(Session session)
+    {
+        // System.out.println("User disconnected with id: " + sessionToUsers.get(session).toString());
+    }
+
     @OnOpen
     public void onOpen(Session session)
     {
@@ -59,7 +66,7 @@ public class ChatController
             {
                 sessionToUsers.put(session, user.getId());
                 usersToSession.put(user.getId(), session);
-                System.out.println("User with id: " + user.getId().toString());
+                System.out.println("User connected with id: " + user.getId().toString());
                 return;
             }
         }
@@ -80,18 +87,18 @@ public class ChatController
     public void onMessage(String message, Session session) 
     {
         //determine type of message, read or content
-        // InboundChatMessageDTO inbound = gson.fromJson(message, InboundChatMessageDTO.class);
+        InboundChatMessageDTO inbound = gson.fromJson(message, InboundChatMessageDTO.class);
         
-        // UUID userId = sessionToUsers.get(session);
-        // OutboundChatMessageDTO outbound = chatService.createMessage(inbound, userId);
-        // String jsonMessage = gson.toJson(outbound);
+        UUID userId = sessionToUsers.get(session);
+        OutboundChatMessageDTO outbound = chatService.createMessage(inbound, userId);
+        String jsonMessage = gson.toJson(outbound);
 
-        // for (UUID id : outbound.recipientIds)
-        // {
-        //     usersToSession.get(id).getAsyncRemote().sendText(jsonMessage);
-        // }
-
-        sessionToUsers.keySet().forEach(s -> s.getAsyncRemote().sendText(message));
+        for (UUID id : outbound.recipientIds)
+        {
+            if (isUserOnline(id)) {
+                usersToSession.get(id).getAsyncRemote().sendText(jsonMessage);
+            }
+        }
     }
 
     public boolean isUserOnline(UUID userId) 
@@ -107,9 +114,19 @@ public class ChatController
         if (!isUserOnline(sender.getId()) ||
             !isUserOnline(recipient.getId())) return false;
 
-        InboundChatMessageDTO message = new InboundChatMessageDTO(conversationId, content);
+        InboundChatMessageDTO message = new InboundChatMessageDTO(conversationId, (byte) 0, content);
         onMessage(gson.toJson(message), usersToSession.get(sender.getId()));
 
+        return true;
+    }
+
+    public boolean notificationFromRest(User recipient)
+    {
+        if (!isUserOnline(recipient.getId())) return false;
+        usersToSession.get(recipient.getId())
+        .getAsyncRemote()
+        .sendText(gson.toJson(new NotificationDTO()));
+        
         return true;
     }
 }
