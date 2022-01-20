@@ -37,20 +37,56 @@ public class FriendshipController extends ControllerBase
         return ok(userQueries.getFriendRequests(user));
     }
 
+    @GET
+    @Path("/has-pending")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response hasPending()
+    {
+        User user = authenticatedUser();
+        return ok(
+            userQueries.getFriendRequests(user)
+            .stream()
+            .filter(fr -> fr.isPending)
+            .count() > 0
+        );
+    }
+
     @POST
     @Path("/{id}/accept")
     @Produces(MediaType.APPLICATION_JSON)
     public Response acceptRequest(@PathParam("id") UUID id)
     {
+        User user = authenticatedUser();
         FriendRequest friendRequest = context.friendRequests.find(id);
+
+        if (!user.equals(friendRequest.getRecipient()))
+        {
+            return forbidden();
+        }
+
         friendRequest.accept();
         context.addOrUpdate(friendRequest);
 
-        Friendship friendship = new Friendship(
-            friendRequest.getSender(),
-            friendRequest.getRecipient()
+        Friendship friendship = userQueries.getFriendshipBetween(
+            friendRequest.getRecipient(),
+            friendRequest.getSender()
         );
+
+        if (friendship != null) 
+        {
+            friendship.makeCurrent();
+        } 
+        else
+        {
+            friendship = new Friendship(
+                friendRequest.getSender(),
+                friendRequest.getRecipient()
+            );
+        }
+
         context.addOrUpdate(friendship);
+
+        // ChatController.instance.notificationFromRest(friendRequest.getSender());
 
         return ok(new FriendRequestDTO(friendRequest));
     }
@@ -61,7 +97,7 @@ public class FriendshipController extends ControllerBase
     public Response declineRequest(@PathParam("id") UUID id)
     {
         FriendRequest friendRequest = context.friendRequests.find(id);
-        friendRequest.accept();
+        friendRequest.reject();
         context.addOrUpdate(friendRequest);
 
         return ok(new FriendRequestDTO(friendRequest));
