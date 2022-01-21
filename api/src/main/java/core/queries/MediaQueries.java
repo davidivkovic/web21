@@ -3,7 +3,6 @@ package core.queries;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -14,6 +13,17 @@ import database.DbContext;
 public class MediaQueries 
 {
     @Inject DbContext context;
+
+    public List<PostDTO> getExplore(LocalDateTime before)
+    {
+        return context.posts.toStream()
+        .filter(p -> !p.getPoster().isPrivate())
+        .filter(p -> p.getTimestamp().isBefore(before))
+        .sorted((postA, postB) -> postB.getTimestamp().compareTo(postA.getTimestamp()))
+        .limit(12)
+        .map(p -> new PostDTO(p))
+        .collect(Collectors.toList());
+    }
 
     public List<PostDTO> getPosts(User user)
     {
@@ -26,13 +36,15 @@ public class MediaQueries
 
     public List<PostDTO> getFeed(User user, LocalDateTime before)
     {
-        Stream<User> friends = context.friendships
+        List<User> friends = context.friendships
         .toStream()
+        .filter(f -> f.getIsCurrent())
         .filter(f -> f.isPresent(user))
-        .map(f -> f.getOtherUser(user));
+        .map(f -> f.getOtherUser(user))
+        .collect(Collectors.toList());
 
         return context.posts.toStream()
-        .filter(p -> friends.anyMatch(f -> f.equals(p.getPoster())))
+        .filter(p -> friends.contains(p.getPoster()) || p.getPoster().equals(user))
         .filter(p -> p.getTimestamp().isBefore(before))
         .sorted((postA, postB) -> postB.getTimestamp().compareTo(postA.getTimestamp()))
         .limit(10)

@@ -12,6 +12,7 @@ import core.model.FriendRequest;
 import core.model.Friendship;
 import core.model.User;
 import core.model.FriendRequest.Status;
+import core.model.User.Role;
 import database.DbContext;
 
 public class UserQueries 
@@ -39,7 +40,7 @@ public class UserQueries
     {
         return context.friendships.toStream()
         .filter(f -> f.isBetween(a, b))
-        .filter(f -> f.getIsCurrent())
+        // .filter(f -> f.getIsCurrent())
         .findFirst()
         .orElse(null);
     }
@@ -47,10 +48,11 @@ public class UserQueries
     public FriendRequest getFriendRequest(User recipient, User sender)
     {
         return context.friendRequests.toStream()
-        .filter(fr -> fr.getSender().equals(sender) &&
-                      fr.getRecipient().equals(recipient) &&
-                      fr.getStatus() == Status.Pending)
-        .findAny()
+        .filter(fr -> fr.isBetween(recipient, sender))
+        // .filter(fr -> fr.getRecipient().equals(recipient))
+        // .filter(fr -> fr.getSender().equals(sender))
+        .sorted((fr1, fr2) -> fr2.getTimestamp().compareTo(fr1.getTimestamp()))
+        .findFirst()
         .orElse(null);
     }
 
@@ -69,6 +71,16 @@ public class UserQueries
     {
         return context.friendRequests.toStream()
         .filter(fr -> fr.getRecipient().equals(user))
+        .filter(fr -> fr.getStatus().equals(Status.Pending) ||
+                       areFriends(fr.getSender(), user))
+        .collect(Collectors.groupingBy(fr -> fr.getSender().getId()))
+        .values()
+        .stream()
+        .map(frList -> frList.stream().sorted((fr1, fr2) -> fr2.getTimestamp().compareTo(fr1.getTimestamp()))
+                             .findFirst()
+                             .get())
+        .sorted((fr1, fr2) -> fr2.getStatus().compareTo(fr1.getStatus()))
+        .sorted((fr1, fr2) -> fr2.getTimestamp().compareTo(fr1.getTimestamp()))
         .map(fr -> new FriendRequestDTO(fr))
         .collect(Collectors.toList());
     }
@@ -86,7 +98,7 @@ public class UserQueries
         boolean areFriends = areFriends(viewer, viewed);
         if (areFriends) user.isFriend = true;
 
-        if (areFriends || !viewed.isPrivate())
+        if (areFriends || !viewed.isPrivate() || (viewer!=null && viewer.getRole().equals(Role.Admin)))
         {
             user = user.includePosts(posts);
         }
@@ -106,8 +118,11 @@ public class UserQueries
 
     public boolean areFriends(User a, User b)
     {
+        if (a == null || b == null) return false;
+
         return context.friendships.toStream()
         .filter(f -> f.isBetween(a, b))
+        .filter(f -> f.getIsCurrent())
         .findAny()
         .isPresent();
     }
@@ -117,28 +132,56 @@ public class UserQueries
         return context.friendships
                    .toStream()
                    .filter(f -> f.isPresent(user))
-                   .map(f -> new UserDTO(f.getOtherUser(user)))
+                   .filter(f -> f.getIsCurrent())
+                   .map(f -> new UserDTO(f.getOtherUser(user)).setIsFriend(true))
                    .collect(Collectors.toList());
+    }
+
+    public List<UserDTO> getFriendsAs(User viewed, User viewer)
+    {
+        return getFriends(viewed).stream()
+        .map(u -> {
+            FriendRequest friendRequest = getFriendRequest(u.user, viewer);
+            if(friendRequest != null)
+            {
+                u.friendRequest = new FriendRequestDTO(friendRequest);
+            }
+            return u.setIsFriend(areFriends(u.user, viewer));
+        })
+        .collect(Collectors.toList());
+    }
+
+    private List<User> mutuals(User viewer, User viewed)
+    {
+        List<User> viewersFriends = context.friendships
+        .toStream()
+        .filter(f -> f.isPresent(viewer))
+        .filter(f -> f.getIsCurrent())
+        .map(f -> f.getOtherUser(viewer))
+        .collect(Collectors.toList());
+
+        List<User> viewedFriends = context.friendships
+            .toStream()
+            .filter(f -> f.isPresent(viewed))
+            .filter(f -> f.getIsCurrent())
+            .map(f -> f.getOtherUser(viewed))
+            .collect(Collectors.toList());
+
+        viewersFriends.retainAll(viewedFriends);
+
+        return viewersFriends;
     }
 
     public List<UserDTO> getMutualFriends(User viewer, User viewed)
     {
-        return context.friendships.toStream()
-        .filter(f -> !f.isBetween(viewer, viewed))
-        .filter(f -> f.getIsCurrent())
-        .filter(f -> f.isPresent(viewer) || f.isPresent(viewed))
-        .map(f -> 
-        {
-            if (f.isPresent(viewer)) return f.getOtherUser(viewer);
-            else return f.getOtherUser(viewed);
-        })
-        .map(u -> new UserDTO(u))
+        return mutuals(viewer, viewed).stream()        
+        .map(u -> new UserDTO(u).setIsFriend(areFriends(u, viewer)))
         .collect(Collectors.toList());
     }
 
     public List<UserDTO> getRecomendedFriends(User user)
     {
-        return context.friendships
+        List<UserDTO> recommended = context.friendships
         .toStream()
         .filter(f -> f.isPresent(user))
         .map(f -> f.getOtherUser(user))
@@ -148,17 +191,54 @@ public class UserQueries
             .filter(f -> f.isPresent(u))
             .map(f -> f.getOtherUser(u));
         })
-        .collect(Collectors.groupingByConcurrent(u -> u, Collectors.counting()))
+        .distinct()
+        .collect(Collectors.toConcurrentMap(u -> u, u -> mutuals(u, user).size()))
         .entrySet()
         .stream()
+        .filter(e -> !e.getKey().equals(user))
+        .filter(e -> !areFriends(e.getKey(), user))
+        .filter(e -> e.getValue() > 0)
         .sorted((countA, countB) -> countA.getValue().compareTo(countB.getValue()))
-        .limit(6)
+        .limit(5)
         .map(g -> 
         {
             UserDTO u = new UserDTO(g.getKey());
+            u.isSuggestion = true;
             u.mutualsCount = g.getValue().intValue();
+            FriendRequest friendRequest = getFriendRequest(g.getKey(), user);
+            if(friendRequest != null)
+            {
+                u.friendRequest = new FriendRequestDTO(friendRequest);
+            }
             return u;
         })
         .collect(Collectors.toList());
+
+        if (recommended.size() == 0) {
+            return context.users.toStream()
+            .collect(Collectors.toMap(u -> u, u -> getFriends(u).size()))
+            .entrySet()
+            .stream()
+            .filter(e -> !e.getKey().equals(user))
+            .filter(e -> !areFriends(e.getKey(), user))
+            .filter(e -> e.getValue() > 0)
+            .sorted((countA, countB) -> countB.getValue().compareTo(countA.getValue()))
+            .limit(5)
+            .map(g -> 
+            {
+                UserDTO u = new UserDTO(g.getKey());
+                u.mutualsCount = g.getValue().intValue();
+                FriendRequest friendRequest = getFriendRequest(g.getKey(), user);
+                if(friendRequest != null)
+                {
+                    u.friendRequest = new FriendRequestDTO(friendRequest);
+                }
+                return u;
+            })
+            .collect(Collectors.toList());
+        }
+
+        
+        return recommended;
     }
 }
