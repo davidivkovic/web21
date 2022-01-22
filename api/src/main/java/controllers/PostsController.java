@@ -2,11 +2,8 @@ package controllers;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -22,14 +19,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import core.contracts.responses.CommentDTO;
 import core.contracts.responses.ConversationDTO;
 import core.contracts.responses.PostDTO;
+import core.contracts.responses.UserDTO;
 import core.model.Comment;
 import core.model.Conversation;
+import core.model.Entity;
 import core.model.Message;
 import core.model.Post;
 import core.model.User;
@@ -66,8 +64,11 @@ public class PostsController extends ControllerBase
             return notFound();
         }
 
-        if (post.getPoster().isPrivate() && 
-           !userQueries.areFriends(post.getPoster(), authenticatedUser()))
+        if (
+            !post.getPoster().equals(authenticatedUser()) &&
+            post.getPoster().isPrivate() && 
+            !userQueries.areFriends(post.getPoster(), authenticatedUser())
+        )
         {
             return forbidden();
         }
@@ -86,7 +87,6 @@ public class PostsController extends ControllerBase
         @FormDataParam("caption") String caption
     ) throws IOException
     {
-        // Files.copy(is, Paths.get("C:/Users/HUAWEI/Desktop", "proba.jpeg"), StandardCopyOption.REPLACE_EXISTING);
         UUID imageId = UUID.randomUUID();
         boolean success = mediaService.saveImage(
             image,
@@ -104,21 +104,11 @@ public class PostsController extends ControllerBase
 
     @GET
     @Path("/{id}/image")
-    @Authorize(allowAnonymous = true)
     @Produces("image/*")
     public Response getImage(@PathParam("id") UUID id)
     {
         Post post = context.posts.find(id);
-        if(post == null)
-        {
-            return notFound();
-        }
-
-        if (post.getPoster().isPrivate() && 
-           !userQueries.areFriends(post.getPoster(), authenticatedUser()))
-        {
-            return forbidden();
-        }
+        if(post == null) return notFound();
 
         return physicalFile(mediaService.getImage(post.getImageURL()));
     }
@@ -173,7 +163,7 @@ public class PostsController extends ControllerBase
         return ok();
     }
 
-    @DELETE
+    @POST
     @Path("/{id}/delete")
     @Authorize({ Role.Admin, Role.User })
     @Produces(MediaType.APPLICATION_JSON)
@@ -189,7 +179,7 @@ public class PostsController extends ControllerBase
         User poster = post.getPoster();
         boolean isAdmin = user.getRole().equals(Role.Admin);
 
-        if (!poster.equals(user) || !isAdmin)
+        if (!poster.equals(user) && !isAdmin)
         {
             return forbidden();
         }
@@ -201,6 +191,8 @@ public class PostsController extends ControllerBase
             {
                 conversation = chatService.createConversation(user, poster);
             }
+
+            reason = "One of your posts has been deleted by our adminstrator for the following reason:\n\n" + reason;
     
             boolean success = ChatController.instance.messageFromRest(
                 conversation.id,
@@ -220,11 +212,10 @@ public class PostsController extends ControllerBase
         post.delete();
         post.deleteAllComments();
         context.addOrUpdate(post);
-        context.addOrUpdateRange((Comment[]) post.getComments().toArray());
+        context.addOrUpdateRange(new ArrayList<Entity>(post.getComments()));
 
         return ok();
     }
-
     
     @POST
     @Authorize
@@ -247,16 +238,31 @@ public class PostsController extends ControllerBase
         user.setImageURL(post.getImageURL());
         context.addOrUpdate(user);
 
-        // return physicalFile(mediaService.getImage(post.getImageURL()));
-        return ok();
+        return ok(new UserDTO(user).imageURL);
     }
 
     @GET
     @Authorize
     @Path("/feed")
-    public Response feed(LocalDateTime before)
+    public Response feed(@QueryParam("before") String before)
     {
-        if (before == null) before = LocalDateTime.now();
-        return ok(mediaQueries.getFeed(authenticatedUser(), before));
+        LocalDateTime beforeDateTime = LocalDateTime.now();
+        if (!before.equals(""))
+        {
+            beforeDateTime = LocalDateTime.parse(before);
+        }
+        return ok(mediaQueries.getFeed(authenticatedUser(), beforeDateTime));
+    }
+
+    @GET
+    @Path("/explore")
+    public Response explore(@QueryParam("before") String before)
+    {
+        LocalDateTime beforeDateTime = LocalDateTime.now();
+        if (!before.equals(""))
+        {
+            beforeDateTime = LocalDateTime.parse(before);
+        }
+        return ok(mediaQueries.getExplore(beforeDateTime));
     }
 }
