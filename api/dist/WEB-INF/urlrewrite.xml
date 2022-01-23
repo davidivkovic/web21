@@ -1,0 +1,36 @@
+<urlrewrite>
+    <rule>
+        <from>/api/swagger-ui</from>
+        <to>/api/swagger-ui/</to>
+    </rule>
+
+    <rule>
+        <from>/api/swagger-ui/</from>
+        <to>/swagger/ui</to>
+    </rule>
+
+    <rule match-type="regex">
+        <from>^/$</from>
+        <to>/spa/index.html</to>
+    </rule>
+    <rule match-type="regex">
+        <from>^(?!/swagger/ui|/dist/|/chat/|/chat|/api|/api/|/src/|/modules/|/favicon.ico|/index.css).*</from>
+        <to>/spa/index.html</to>
+    </rule>
+    <rule match-type="wildcard">
+        <from>/src/**</from>
+        <to>/spa/src/$1</to>
+    </rule>
+    <rule match-type="wildcard">
+        <from>/modules/**</from>
+        <to>/spa/modules/$1</to>
+    </rule>
+    <rule>
+        <from>/index.css</from>
+        <to>/spa/index.css</to>
+    </rule>    
+    <rule>
+        <from>/favicon.ico</from>
+        <to>/spa/favicon.ico</to>
+    </rule>
+</urlrewrite>
