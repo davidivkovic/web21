@@ -1,18 +1,18 @@
 import { useEmojiTextArea } from '../emoji/emojiTextArea.js'
 import ArrowLeftIcon from '/modules/@heroicons/vue/outline/ArrowLeftIcon.js'
-import { useRouter } from '/modules/vue-router.js'
-import { computed, ref, watchEffect } from '/modules/vue.js'
+import { computed, ref } from '/modules/vue.js'
 import api from '/src/api/api.js'
 import EmojiMenu from '/src/components/emoji/EmojiMenu.js'
 import Button from '/src/components/ui/Button.js'
 import Modal from '/src/components/ui/Modal.js'
 import MediaIcon from '/src/icons/MediaIcon.js'
 import { closeDialog, isDialogOpen } from '/src/store/dialogStore.js'
+import { newPost } from '/src/store/feedStore.js'
 import { user } from '/src/store/userStore.js'
 export default {
   template: `  
   	<Modal
-  		:isOpen="isOpen"
+  		:isOpen="isDialogOpen"
   		@modalClosed="closeDialog()"
   		class="bg-white h-4/5"
   		:style="modalStyle"
@@ -89,14 +89,11 @@ export default {
   },
 
   setup() {
-    const isOpen = ref(false)
     const isDetailsOpen = ref(false)
     const imageURL = ref('')
-    const image = ref(null)
     const captionTextArea = ref(null)
     const emojisVisible = ref(false)
     let file
-    const router = useRouter()
     const { emojiSelected, text: captionText } =
       useEmojiTextArea(captionTextArea)
     const captionTextLength = computed(() => captionText.value.length)
@@ -106,10 +103,6 @@ export default {
     const modalStyle = computed(
       () => `width: calc(100vh * ${dialogWidthRatio.value})`
     )
-    watchEffect(() => {
-      setTimeout(() => (isOpen.value = isDialogOpen.value), 0)
-      !isDialogOpen.value && setTimeout(() => router.back(), 200)
-    })
 
     const handleFileInput = fileEvent => {
       const reader = new FileReader()
@@ -124,13 +117,17 @@ export default {
     }
 
     const sharePost = async () => {
-      await api.posts.upload(file, captionText.value)
-      closeDialog()
+      const [data] = await api.posts.upload(file, captionText.value)
+
+      if (data) {
+        newPost(data)
+        closeDialog()
+      }
     }
 
     return {
       user,
-      isOpen,
+      isDialogOpen,
       closeDialog,
       handleFileInput,
       isDetailsOpen,
