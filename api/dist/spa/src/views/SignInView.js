@@ -86,6 +86,7 @@ export default {
   },
 
   setup() {
+    document.title = 'Instagram'
     const activeScreen = ref(0)
     const success = ref(false)
     const authPanel = shallowRef(SignInPanel)
