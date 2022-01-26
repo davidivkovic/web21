@@ -12,12 +12,12 @@ import SettingsIcon from '/src/icons/SettingsIcon.js'
 import { user } from '/src/store/userStore.js'
 export default {
   template: `  
-  	<Menu as="div" class="relative block text-left" v-slot="{ open }">
+  	<Menu as="div" class="relative block text-left z-20" v-slot="{ open }">
   		<MenuButton
   			class="w-6 h-6 mt-0.5 rounded-full"
   			:class="{ 'outline outline-offset-1 outline-1': open }"
   		>
-  			<img :src="imageURL" alt="Profile picture" class="w-6 h-6 rounded-full" />
+  			<img :src="user.imageURL" alt="Profile picture" class="w-6 h-6 rounded-full" />
   		</MenuButton>
   
   		<transition
@@ -49,24 +49,25 @@ export default {
   						</RouterLink>
   					</MenuItem>
   					<MenuItem v-slot="{ active }">
-  						<button
-  							class="space-x-0.5"
-  							:class="[
-  								active ? 'bg-gray-50' : 'text-gray-900',
-  								'group flex  items-center mt-0.5 mb-1 w-full px-3.5 py-2 text-sm',
-  							]"
-  						>
-  							<CogIcon class="w-5 h-5 mr-2" aria-hidden="true" />
-  							<p>Settings</p>
-  						</button>
+  						<RouterLink :to="{name: 'settings'}">
+  							<button
+  								class="space-x-0.5"
+  								:class="[
+  									active ? 'bg-gray-50' : 'text-gray-900',
+  									'group flex  items-center mt-0.5 mb-1 w-full px-3.5 py-2 text-sm',
+  								]"
+  							>
+  								<CogIcon class="w-5 h-5 mr-2" aria-hidden="true" />
+  								<p>Settings</p>
+  							</button>
+  						</RouterLink>
   					</MenuItem>
   				</div>
   				<div>
   					<MenuItem v-slot="{ active }">
-  						<a
+  						<div
   							@click="api.auth.signOut()"
-  							href="/"
-  							class="space-x-1"
+  							class="space-x-1 cursor-pointer"
   							:class="[
   								active ? 'bg-gray-50' : 'text-gray-900',
   								'group flex  items-center w-full px-3.5 py-2.5 text-sm',
@@ -74,7 +75,7 @@ export default {
   						>
   							<LogoutIcon class="w-5 h-5 mr-2" aria-hidden="true" />
   							<p>Log Out</p>
-  						</a>
+  						</div>
   					</MenuItem>
   				</div>
   			</MenuItems>
