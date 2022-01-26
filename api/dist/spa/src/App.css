@@ -1,21 +1,22 @@
   
 @font-face {
 	font-family: "Inter";
-	src: url("/src/assets/fonts/Inter.var.woff2")
-			format("woff2 supports variations"),
-		url("/src/assets/fonts/Inter.var.woff2") format("woff2-variations");
+	src: url("/src/assets/fonts/Inter.var.woff2") format("woff2 supports variations"),
+		 url("/src/assets/fonts/Inter.var.woff2") format("woff2-variations");
 	font-weight: 100 1000;
 	font-display: swap;
 }
-html {
-	overflow: -moz-scrollbars-vertical;
-	overflow-y: scroll;
-}
+
+/* :root {
+    overflow: hidden;
+} */
 body {
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	font-family: "Inter", sans-serif;
+	/* max-height: 100vh;
 	overflow-x: hidden;
+	overflow-y: overlay; */
 }
 svg path {
 	stroke-width: 1.5;
