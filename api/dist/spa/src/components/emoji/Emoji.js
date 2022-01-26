@@ -1,6 +1,6 @@
 export default {
   template: `  
-  	<button class="rounded p-1 duration-500 hover:bg-gray-200" @click="onClick">
+  	<button class="rounded pb-1 pr-1 duration-100 hover:bg-gray-200" @click="onClick">
   		<div :class="classes" v-html="emoji" />
   	</button>
   `,

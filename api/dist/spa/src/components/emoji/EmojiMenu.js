@@ -13,25 +13,15 @@ export default {
   	<Popover class="inline-flex" v-slot="{ open }" @change="toggleEmojis">
   		<SlotWatcher :prop="open"></SlotWatcher>
   		<PopoverButton class="focus:outline-none">
-  			<SmileyIcon class="text-2xl" />
+  			<SmileyIcon :class="large ? 'w-6 h-6 text-black' : 'text-gray-500'" />
   		</PopoverButton>
   		<PopoverPanel class="absolute z-10">
-  			<div class="absolute bg-gray-50 rounded-md w-72 p-0.5 border" :class="menuPositionClass">
-  				<!-- <div
-  						class="flex flex-row justify-center align-center p-0.5 h-10 overflow-x-auto overflow-y-hidden"
-  					>
-  						<div v-for="tab in emojis" :key="tab.group">
-  							<Emoji class="w-6 h-6 text-xl p-px" :emoji="tab.el[0].u" @tapped="group = tab.group" />
-  						</div>
-  				</div>-->
+  			<div class="absolute bg-gray-50 rounded-md w-[300px] pl-1 py-1 border" :class="menuPositionClass">
   				<div
-  					v-for="(list, index) in emojis"
-  					v-show="index === group"
-  					:key="index"
-  					class="grid grid-cols-5 md:grid-cols-8 col-start-1 row-start-1 place-content-start gap-0 justify-items-center items-center h-56 p-1 overflow-y-scroll"
+  					class="grid overflow-x-hidden grid-cols-6 md:grid-cols-7 h-56 pl-1 py-1 overflow-y-scroll"
   				>
-  					<div v-for="emoji in list.el" :key="emoji.u" class="w-10 h-10">
-  						<Emoji class="text-xl" :emoji="emoji.u" @click="$emit('select', emoji.u)" />
+  					<div v-for="(emoji, idx) in emojis" :key="idx" class="w-10 h-10">
+  						<Emoji class="text-2xl" :emoji="emoji" @click="$emit('select', emoji)" />
   					</div>
   				</div>
   			</div>
@@ -48,6 +38,7 @@ export default {
   },
   props: {
     isOpen: Boolean,
+    large: Boolean,
     position: {
       required: false,
       type: String,
@@ -72,7 +63,11 @@ export default {
       setTimeout(() => emit('close', value), 100)
     }
 
-    const emojis = emojiGroupList.slice(0, 3)
+    const emojis = emojiGroupList
+      .slice(0, 2)
+      .flatMap(g => g.el)
+      .map(e => e.u)
+      .slice(0, 200)
     return {
       group,
       emojis,
