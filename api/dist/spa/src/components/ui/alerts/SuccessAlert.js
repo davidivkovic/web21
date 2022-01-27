@@ -3,7 +3,7 @@ import XIcon from '/modules/@heroicons/vue/solid/XIcon.js'
 export default {
   template: `  
       <div
-          class="rounded-md bg-green-50 p-4 mt-4 transition-all max-w-3xl absolute right-0 left-0 mx-auto"
+          class="rounded-md bg-green-50 p-4 mt-5 transition-all max-w-sm absolute right-0 left-0 mx-auto"
       >
           <div class="flex">
               <div class="flex-shrink-0">
