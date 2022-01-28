@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.Console;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.UUID;
 
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
@@ -49,6 +51,16 @@ public class ChatController
     public void onClose(Session session)
     {
         // System.out.println("User disconnected with id: " + sessionToUsers.get(session).toString());
+    }
+
+    @OnError
+    public void onError(Session session, Throwable throwable)
+    {
+        try {
+            session.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnOpen
