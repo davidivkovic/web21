@@ -51,6 +51,23 @@ public class UserController extends ControllerBase
     @Inject DbContext context;
 
     @GET
+    @Path("/")
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchByUsernameOrFullName(@QueryParam("query") String query)
+    {   
+        return ok(
+            context.users.toStream()
+            .filter(u ->
+                u.getUsername().toLowerCase().contains(query.toLowerCase()) ||
+                u.getFullName().toLowerCase().contains(query.toLowerCase())      
+            )
+            .map(u -> new UserDTO(u))
+            .collect(Collectors.toList())
+        );
+    }
+
+    @GET
     @Path("/search")
     @Authorize(allowAnonymous = true)
     @Produces(MediaType.APPLICATION_JSON)
