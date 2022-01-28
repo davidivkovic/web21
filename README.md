@@ -1,3 +1,21 @@
+# WEB21 (Instagram clone)
+Project developed during the university course WEB Programming, where Node.js is strictly forbidden for no reason ⚠️
+
+## Built using 💻🚀
+- [Java 1.8](https://www.java.com/en/download/manual.jsp) 🤮
+- [Jersey](https://eclipse-ee4j.github.io/jersey/) 😩😰
+- [Vue.js](https://v3.vuejs.org/) 🥰
+- [Tailwind CSS](https://tailwindcss.com/) 😍
+- [Headless UI](https://headlessui.dev/) 👍
+- [Heroicons](https://heroicons.com/) 👍
+
+### Caveats ❌
+Since the project isn't compiled or bundled, Vue has to compile the templates into VDOM at runtime. This can cause the application to work slower than expected.
+
+# Showcase 📸
+![create](https://i.ibb.co/XJND0Dm/localhost-8080-create-High-Resolution-1.png)
+
+
 ## Setting up vscode:
 
 1. Install the [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack)
