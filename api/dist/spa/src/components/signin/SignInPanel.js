@@ -13,7 +13,7 @@ export default {
   				<form @submit.prevent="onSubmit" class="relative">
   					<FloatingInput
   						name="username"
-  						id="username"
+  						id="username-signin"
   						placeholder="Username"
   						autocomplete="username"
   						required
@@ -22,7 +22,7 @@ export default {
   						<FloatingInput
   							:type="isPasswordVisible ? 'text' : 'password'"
   							name="password"
-  							id="password"
+  							id="password-signin"
   							autocomplete="current-password"
   							type="password"
   							v-model="password"
@@ -61,12 +61,22 @@ export default {
   			<p class="text-gray-700">
   				Don't have an account?
   				<button
-  					class="font-semibold text-blue-400 transition hover:text-blue-300"
+  					class="font-medium text-blue-400 transition hover:text-blue-300"
   					@click="$emit('switchAuth')"
   				>Sign up</button>
   			</p>
   		</div>
-  		<p class="mt-5 text-center text-gray-700">Get the app.</p>
+  		<div class="flex items-center justify-center space-x-2 mt-5">
+  			<p class="text-gray-700">Get the app</p>
+  			<div class="flex items-center space-x-1">
+  				<div class="h-px w-2 bg-neutral-400"></div>
+  				<p class="text-[11.5px] text-neutral-400">OR</p>
+  				<div class="h-px w-2 bg-neutral-400"></div>
+  			</div>
+  			<RouterLink to="/explore" class="font-medium text-blue-400">
+  				Explore
+  			</RouterLink>
+  		</div>
   		<div class="flex items-center justify-center mt-5 space-x-2">
   			<img class="w-32 h-10" src="/src/assets/images/store1.png" />
   			<img class="w-32 h-10 h-" src="/src/assets/images/store2.png" />

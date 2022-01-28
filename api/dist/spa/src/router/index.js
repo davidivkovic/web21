@@ -35,8 +35,22 @@ const router = createRouter({
     },
 
     {
+      path: '/explore',
+      name: 'explore',
+      component: () => import('../views/ExploreView.js'),
+    },
+
+    {
       path: '/direct',
       name: 'direct',
+      children: [
+        {
+          path: 't/:id',
+          name: 'direct-thread',
+          component: () => import('../views/DirectView.js'),
+        },
+      ],
+
       component: () => import('../views/DirectView.js'),
     },
 
@@ -51,6 +65,12 @@ const router = createRouter({
       name: 'post',
       beforeEnter: (to, from) =>
         dialogRouteFunc(to, from, '../components/profile/PostDialog.js'),
+    },
+
+    {
+      path: '/settings',
+      name: 'settings',
+      component: () => import('../views/SettingsView.js'),
     },
   ],
 })

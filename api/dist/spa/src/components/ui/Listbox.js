@@ -14,27 +14,28 @@ export default {
   	<div class="top-16">
   		<Listbox v-model="selectedValue">
   			<div class="relative">
-  				<ListboxButton v-if="floating">
+  				<ListboxButton v-if="floating" class="border rounded-sm border-gray-300 bg-gray-50 w-full">
   					<FloatingInput
   						readonly
   						v-bind="$attrs"
   						v-model="selectedValue"
   						:name="name"
-  						class="cursor-pointer h-10"
+  						class="cursor-pointer h-[38px] border-0 focus:outline-none "
   					/>
   					<span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
   						<ChevronDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
   					</span>
   				</ListboxButton>
   
-  				<ListboxButton v-else
-  					class="relative px-2.5 text-xs text-left bg-gray-50 rounded border-gray-300 focus:ring-0 focus-visible:outline-none focus:border-gray-800 py-2.5 transition-colors placeholder-gray-400 w-full border"
+  				<ListboxButton 
+  					v-else
+  					class="relative px-2.5 text-xs text-left bg-gray-50 rounded-sm border-gray-300 focus:ring-0 focus-visible:outline-gray-500 focus:border-gray-500 py-2.5 transition-colors placeholder-gray-400 w-full border"
   				>
   					<input
   						readonly
   						v-model="selectedValue"
   						:name="name"
-  						class="bg-gray-50 w-full cursor-pointer focus-visible:outline-none"
+  						class="w-full cursor-pointer focus-visible:outline-none bg-neutral-50"
   					/>
   					<span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
   						<ChevronDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
@@ -47,7 +48,7 @@ export default {
   					leave-to-class="opacity-0"
   				>
   					<ListboxOptions
-  						class="absolute w-full z-10 py-1 mt-1 overflow-auto text-xs bg-white rounded shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none"
+  						class="absolute w-full z-10 py-1 mt-1 overflow-auto text-xs bg-white rounded-sm shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none"
   					>
   						<ListboxOption
   							v-slot="{ active, selected }"
@@ -59,7 +60,7 @@ export default {
   							<li
   								:class="[
   									active ? 'bg-gray-100' : 'text-gray-900',
-  									'cursor-pointer select-none relative py-2 pl-9 pr-4',
+  									'cursor-pointer select-none relative py-2 pl-5 pr-5 text-left',
   								]"
   							>
   								<span
@@ -68,7 +69,7 @@ export default {
   										'block truncate',
   									]"
   								>{{ value }}</span>
-  								<span v-if="selected" class="absolute inset-y-0 left-0 flex items-center pl-3">
+  								<span v-if="selected" class="absolute inset-y-0 right-2 flex items-center pl-3">
   									<CheckIcon class="w-4 h-4" aria-hidden="true" />
   								</span>
   							</li>
@@ -83,6 +84,10 @@ export default {
     values: Array,
     name: String,
     floating: Boolean,
+    default: {
+      type: String,
+      required: false,
+    },
   },
   components: {
     Listbox,
@@ -97,8 +102,14 @@ export default {
 
   setup(props, { emit }) {
     const selectedValue = ref()
+
+    if (props.default != null) {
+      selectedValue.value = props.default
+    } else {
+      selectedValue.value = props.values[0]
+    }
+
     watchEffect(() => emit('change', selectedValue.value))
-    selectedValue.value = props.values[0]
     return {
       selectedValue,
     }

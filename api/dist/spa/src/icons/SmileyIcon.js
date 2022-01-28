@@ -3,8 +3,8 @@ export default {
   	<svg
   		aria-label="Emoji"
   		class="_8-yf5"
-  		color="#8e8e8e"
-  		fill="#8e8e8e"
+  		color="currentColor"
+  		fill="currentColor"
   		height="20"
   		role="img"
   		viewBox="0 0 24 24"

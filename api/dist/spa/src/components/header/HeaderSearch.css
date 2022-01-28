@@ -1,0 +1,10 @@
+  
+details > summary {
+  list-style: none;
+}
+details > summary::marker {
+  display: none;
+}
+details[open] > summary svg {
+	transform: scaleY(-1);
+}
