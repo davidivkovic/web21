@@ -1,0 +1,9 @@
+{
+    "java.project.sourcePaths": [
+        "src/main/java"
+    ],
+    "java.project.referencedLibraries": [
+        "dist/WEB-INF/lib/*"
+    ],
+    "java.project.outputPath": "dist/WEB-INF/classes",
+}
