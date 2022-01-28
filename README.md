@@ -13,6 +13,7 @@ Project developed during the university course WEB Programming, where Node.js is
 Since the project isn't compiled or bundled, Vue has to compile the templates into VDOM at runtime. This can cause the application to work slower than expected.
 
 # Showcase 📸
+![signin](https://i.ibb.co/6wk5kwx/localhost-8080-High-Resolution.png)
 ![create](https://i.ibb.co/XJND0Dm/localhost-8080-create-High-Resolution-1.png)
 
 # REST API 📝
