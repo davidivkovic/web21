@@ -1,13 +1,13 @@
 # WEB21 (Instagram clone)
-Project developed during the university course WEB Programming, where Node.js is strictly forbidden for no reason ⚠️
+Project developed during the university course WEB Programming, where Node.js is strictly forbidden. ⚠️
 
 ## Built using 💻🚀
-- [Java 1.8](https://www.java.com/en/download/manual.jsp) 🤮
-- [Jersey](https://eclipse-ee4j.github.io/jersey/) 😩😰
-- [Vue.js](https://v3.vuejs.org/) 🥰
-- [Tailwind CSS](https://tailwindcss.com/) 😍
-- [Headless UI](https://headlessui.dev/) 👍
-- [Heroicons](https://heroicons.com/) 👍
+- [Java 1.8](https://www.java.com/en/download/manual.jsp)
+- [Jersey](https://eclipse-ee4j.github.io/jersey/)
+- [Vue.js](https://v3.vuejs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Headless UI](https://headlessui.dev/)
+- [Heroicons](https://heroicons.com/)
 
 ### Caveats ❌
 Since the project isn't compiled or bundled, Vue has to compile the templates into VDOM at runtime. This can cause the application to work slower than expected.
