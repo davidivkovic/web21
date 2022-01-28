@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from '/modules/axios.js'
 import router from '/src/router/index.js'
 import { setUser } from '/src/store/userStore.js'
 
