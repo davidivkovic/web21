@@ -15,6 +15,10 @@ Since the project isn't compiled or bundled, Vue has to compile the templates in
 # Showcase 📸
 ![create](https://i.ibb.co/XJND0Dm/localhost-8080-create-High-Resolution-1.png)
 
+# REST API 📝
+
+### OpenAPI Specification (Access Swagger UI at http://localhost:8080/api/swagger-ui)
+![swagger-ui](https://i.ibb.co/8YhTtxT/localhost-8080-swagger-ui-1.png)
 
 ## Setting up vscode:
 
