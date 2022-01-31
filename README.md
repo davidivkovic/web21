@@ -18,6 +18,14 @@ Since the project isn't compiled or bundled, Vue has to compile the templates in
 
 # REST API 📝
 
+### Authentication flow
+![auth](https://valor-software.com/assets/images/5e456e6a9522e72386a3d109_D-zJVfpIrJ-Ji17cz4XsxFhXbJ7M6u0l9t-0fnzVVEN_O9HqCLyb-kzVV9PD3VQepkw2G6MmVTIidM6kTZ_-qbQVrLppqWNrV0pue1FyXWgkgwdE1sjVb6ZFp8WM_hFEBmnwSc_5.png)
+
+- The refresh token is set as an `HTTPOnly` cookie to mitigate CSRF
+- Axios interceptors silently fetch a new access token using the provided refresh token cookie
+- The access token should only be held in-memory, never in local storage, to mitigate XSS
+- Axios interceptors handle other cross-cutting concerns such as detecting whether a user has been banned or their refresh token was revoked
+
 ### OpenAPI Specification (Access Swagger UI at http://localhost:8080/api/swagger-ui)
 ![swagger-ui](https://i.ibb.co/8YhTtxT/localhost-8080-swagger-ui-1.png)
 
