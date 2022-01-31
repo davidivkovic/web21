@@ -95,10 +95,16 @@ public class UserQueries
         .map(p -> new PostDTO(p))
         .collect(Collectors.toList());
 
+        boolean isMe = viewer != null && viewed.getId().equals(viewer.getId());
         boolean areFriends = areFriends(viewer, viewed);
         if (areFriends) user.isFriend = true;
 
-        if (areFriends || !viewed.isPrivate() || (viewer!=null && viewer.getRole().equals(Role.Admin)))
+        if (
+            isMe ||
+            areFriends || 
+            !viewed.isPrivate() ||
+            (viewer!=null && viewer.getRole().equals(Role.Admin))
+        )
         {
             user = user.includePosts(posts);
         }

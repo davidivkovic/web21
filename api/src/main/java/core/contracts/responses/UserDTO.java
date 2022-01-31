@@ -73,24 +73,6 @@ public class UserDTO
         return this;
     }
 
-    public UserDTO includeFriendRequest(FriendRequestDTO request)
-    {
-        friendRequest = request;
-        return this;
-    }
-
-    public UserDTO includeFriendsCount(int count)
-    {
-        friendsCount = count;
-        return this;
-    }
-
-    public UserDTO includePostsCount(int count)
-    {
-        postsCount = count;
-        return this;
-    }
-
     public UserDTO setIsFriend(boolean status)
     {
         isFriend = status;
@@ -102,16 +84,4 @@ public class UserDTO
         this.posts = posts;
         return this;
     }
-
-    public UserDTO includeFriends(List<UserDTO> friends)
-    {
-        this.friends = friends;
-        return this;
-    }
-
-    public UserDTO includeMutualFriends(List<UserDTO> mutualFriends)
-    {
-        this.mutualFriends = mutualFriends;
-        return this;
-    }   
 }

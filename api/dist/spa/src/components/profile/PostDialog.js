@@ -148,7 +148,7 @@ export default {
     }
 
     const postComment = async () => {
-      ;[data] = await api.posts.comment(post.value.id, commentText.value)
+      [data] = await api.posts.comment(post.value.id, commentText.value)
 
       if (data) {
         post.value.comments.push(data)

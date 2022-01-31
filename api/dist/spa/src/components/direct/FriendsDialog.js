@@ -74,9 +74,9 @@ export default {
         selectedUser.value = null
 
         if (query.value.trim() == '') {
-          ;[data] = await api.users.getFriends(user.username)
+          [data] = await api.users.getFriends(user.username)
         } else {
-          ;[data] = await api.users.searchUsernameFullName(newQuery)
+          [data] = await api.users.searchUsernameFullName(newQuery)
         }
 
         data && (friends.value = data)

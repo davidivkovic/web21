@@ -93,7 +93,7 @@ public class ConversationsController extends ControllerBase
         }
 
         LocalDateTime beforeDateTime = LocalDateTime.now();
-        if (before != null)
+        if (before != null && !before.equals(""))
         {
             beforeDateTime = LocalDateTime.parse(before);
         }

@@ -124,7 +124,7 @@ export default {
     const sortBy = ref(sortOptions[0])
     let data
     watch([query, dateEnabled, sortBy, monthFrom, monthTo], async () => {
-      ;[data] = await api.users.search(
+      [data] = await api.users.search(
         query.value,
         dateEnabled.value ? monthFrom.value : null,
         dateEnabled.value ? monthTo.value : null,

@@ -247,7 +247,7 @@ public class PostsController extends ControllerBase
     public Response feed(@QueryParam("before") String before)
     {
         LocalDateTime beforeDateTime = LocalDateTime.now();
-        if (!before.equals(""))
+        if (before != null && !before.equals(""))
         {
             beforeDateTime = LocalDateTime.parse(before);
         }
@@ -259,7 +259,7 @@ public class PostsController extends ControllerBase
     public Response explore(@QueryParam("before") String before)
     {
         LocalDateTime beforeDateTime = LocalDateTime.now();
-        if (!before.equals(""))
+        if (before != null && !before.equals(""))
         {
             beforeDateTime = LocalDateTime.parse(before);
         }
