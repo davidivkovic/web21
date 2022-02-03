@@ -88,3 +88,48 @@ Since the project isn't compiled or bundled, Vue has to compile the templates in
     If this happens recompile the project and debug again.
 6. The changes should be reflected in the next request.
 7. Test the debugger by inserting a breakpoint anywhere in the source code.
+
+
+## Important notes
+
+- Always stop the tomcat server before exiting VSCode. Otherwise tomcat will not release the port `8080` and you will not be able to run it again.
+
+  You can stop it by using Command Palette (Ctrl + Shift + P) > Stop Tomcat Server.
+
+  If this does not work you can use the command `./catalina.bat stop` inside [`server/apache-tomcat-8.0.47/bin`](/server/apache-tomcat-8.0.47/bin)
+
+- The controllers use GSON to serdes api requests and responses
+
+[`config/JerseyConfig.java`](/src/main/java/config/JerseyConfig.java)
+- The api base path `/api` is defined with 
+```java
+@ApplicationPath("/api")
+public class JerseyConfig extends ResourceConfig { }
+```
+
+- Register dependency injection classes with
+```java
+register(MediaService.class);
+
+register(new AbstractBinder() {
+    @Override
+    protected void configure() {
+        bindAsContract(MediaService.class).in(Immediate.class);
+    }
+});
+```
+
+- Register the package for controller resolution, the server won't start without this (change this if you change the controllers package name):
+
+```java
+packages("controllers");
+```
+
+
+[`server/apache-tomcat-8.0.47/conf/server.xml`](/server/apache-tomcat-8.0.47/conf/server.xml)
+- You can change the api port here
+```xml
+<Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443" />
+```
+
+
