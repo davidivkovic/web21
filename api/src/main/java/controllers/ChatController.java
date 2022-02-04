@@ -48,8 +48,25 @@ public class ChatController
 
     @OnClose
     public void onClose(Session session)
-    {
-        // System.out.println("User disconnected with id: " + sessionToUsers.get(session).toString());
+	{
+		try 
+		{
+			String token = session.getQueryString().substring("token=".length());
+			Jws<Claims> jwt = tokenService.parseAccesToken(token);
+
+			if (jwt != null)
+			{
+				UUID userId = UUID.fromString(jwt.getBody().getSubject());
+				sessionToUsers.remove(session);
+				usersToSession.remove(userId);
+				
+				session.close();
+				return;
+			}
+		} catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
     }
 
     @OnError
