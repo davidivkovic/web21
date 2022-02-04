@@ -1,0 +1,57 @@
+{
+  "lastMessageAt": "2022-02-05T00:27:03.482281",
+  "members": [
+    {
+      "username": "imsofreshx",
+      "password": "sonicgear1",
+      "email": "gorajkora@gmail.com",
+      "fullName": "David Ivković",
+      "dateOfBirth": "2000-07-04",
+      "gender": "Male",
+      "role": "Admin",
+      "imageURL": "d50b1b4b-cdb8-428b-85c5-2b21eeb3837f",
+      "isPrivate": true,
+      "isBanned": false,
+      "id": "bf4c435f-41d0-447a-b784-2a9dd9a05888",
+      "isActive": true
+    },
+    {
+      "username": "jovanovicmm",
+      "password": "password123",
+      "email": "jovanovicm@gmail.com",
+      "fullName": "Marko Jovanović",
+      "dateOfBirth": "1993-12-06",
+      "gender": "Male",
+      "role": "User",
+      "imageURL": "profile-default",
+      "isPrivate": true,
+      "isBanned": false,
+      "id": "e0af7080-ccb2-4216-9706-47139b205e83",
+      "isActive": true
+    }
+  ],
+  "messages": [
+    {
+      "content": "One of your posts has been deleted by our adminstrator for the following reason:\n\nNot appropriate",
+      "sentAt": "2022-02-05T00:27:03.482281",
+      "sender": {
+        "username": "imsofreshx",
+        "password": "sonicgear1",
+        "email": "gorajkora@gmail.com",
+        "fullName": "David Ivković",
+        "dateOfBirth": "2000-07-04",
+        "gender": "Male",
+        "role": "Admin",
+        "imageURL": "d50b1b4b-cdb8-428b-85c5-2b21eeb3837f",
+        "isPrivate": true,
+        "isBanned": false,
+        "id": "bf4c435f-41d0-447a-b784-2a9dd9a05888",
+        "isActive": true
+      },
+      "id": "10ebb107-8b7f-4e60-816e-4d7fb4fb7165",
+      "isActive": true
+    }
+  ],
+  "id": "335267cb-f4ce-4912-9041-8b0745d9a9a3",
+  "isActive": true
+}

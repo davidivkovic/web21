@@ -66,7 +66,8 @@ public class PostsController extends ControllerBase
 
         if (
             !post.getPoster().equals(authenticatedUser()) &&
-            post.getPoster().isPrivate() && 
+			post.getPoster().isPrivate() &&
+			!authenticatedUser().getRole().equals(Role.Admin) &&
             !userQueries.areFriends(post.getPoster(), authenticatedUser())
         )
         {

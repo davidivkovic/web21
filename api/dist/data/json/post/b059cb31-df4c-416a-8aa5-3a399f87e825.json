@@ -1,0 +1,22 @@
+{
+  "content": "",
+  "timestamp": "2022-02-04T22:26:45.5930094",
+  "imageURL": "c34dde2e-4f5b-4f1e-b73a-4672c82f059d",
+  "poster": {
+    "username": "_bulajic_marina_",
+    "password": "password123",
+    "email": "bulajicmarina@gmail.com",
+    "fullName": "Marina Bulajić ",
+    "dateOfBirth": "2004-04-02",
+    "gender": "Female",
+    "role": "User",
+    "imageURL": "cd21a9f9-823e-440f-bf19-1e0dfb5873fc",
+    "isPrivate": false,
+    "isBanned": false,
+    "id": "e98e07a7-f2bb-42ee-b665-c177ee62334e",
+    "isActive": true
+  },
+  "comments": [],
+  "id": "b059cb31-df4c-416a-8aa5-3a399f87e825",
+  "isActive": false
+}

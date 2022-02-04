@@ -1,0 +1,19 @@
+{
+  "expires": "2022-05-05T00:28:14.3543297",
+  "user": {
+    "username": "joveliiic",
+    "password": "password123",
+    "email": "dunjajovelic@gmail.com",
+    "fullName": "Dunja Jovelić",
+    "dateOfBirth": "2001-06-17",
+    "gender": "Female",
+    "role": "User",
+    "imageURL": "eaf37b83-2a5c-4dd8-8295-9d0c4251ee62",
+    "isPrivate": false,
+    "isBanned": false,
+    "id": "b426f28a-4784-44e4-aed9-1cdc798810d2",
+    "isActive": true
+  },
+  "id": "0b9fa3ef-c960-466a-baa5-3cfeef1c7f1a",
+  "isActive": true
+}

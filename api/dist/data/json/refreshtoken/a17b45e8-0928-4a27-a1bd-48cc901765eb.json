@@ -1,0 +1,19 @@
+{
+  "expires": "2022-05-05T00:24:48.624502",
+  "user": {
+    "username": "imsofreshx",
+    "password": "sonicgear1",
+    "email": "gorajkora@gmail.com",
+    "fullName": "David Ivković",
+    "dateOfBirth": "2000-07-04",
+    "gender": "Male",
+    "role": "Admin",
+    "imageURL": "d50b1b4b-cdb8-428b-85c5-2b21eeb3837f",
+    "isPrivate": true,
+    "isBanned": false,
+    "id": "bf4c435f-41d0-447a-b784-2a9dd9a05888",
+    "isActive": true
+  },
+  "id": "a17b45e8-0928-4a27-a1bd-48cc901765eb",
+  "isActive": false
+}
