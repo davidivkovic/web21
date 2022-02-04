@@ -114,7 +114,7 @@ export default {
   					</div>
   					<div class="flex space-x-8">
   						<div>
-  							<span class="font-medium">{{ user.posts.length }}</span>
+  							<span class="font-medium">{{ user.postsCount }}</span>
   							{{ user.posts.length == 1 ? 'post' : 'posts'}}
   						</div>
   						<div 

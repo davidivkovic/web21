@@ -44,7 +44,7 @@ export default {
   				 	   w-[440px] z-20 rounded bg-white text-[13px]
   					   border border-gray-300 py-4 pl-3 pr-4 shadow-lg"
   			>
-			  	<div class="absolute top-0 right-7 w-4 h-4 float-left
+			  	<div class="absolute top-0 right-7 w-4 h-4
 					-mt-2 mr-5 border-gray-300 rotate-45
 					bg-white rounded-sm border-t border-l">
   				</div>

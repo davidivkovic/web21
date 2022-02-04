@@ -7,7 +7,7 @@ export default {
   			:to="'/' + request.sender.username" 
   			class="flex justify-start items-center space-x-3 cursor-pointer"
   		>
-  			<img :src="request.sender.imageURL" class="rounded-full w-10 h-10" />
+  			<img :src="request.sender.imageURL" class="rounded-full w-10 h-10 object-cover" />
   			<div class="flex space-x-1">
   				<span class="font-medium">{{ request.sender.username }}
   				<span class="font-normal text-gray-900">
