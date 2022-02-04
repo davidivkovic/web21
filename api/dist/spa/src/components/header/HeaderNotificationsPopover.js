@@ -41,12 +41,12 @@ export default {
   			<PopoverPanel
   				:static="isDialogOpen"
   				class="absolute mt-3 origin-top-right right-0 max-h-96
-  				 	   w-[430px] z-20 rounded bg-white text-[13px]
+  				 	   w-[440px] z-20 rounded bg-white text-[13px]
   					   border border-gray-300 py-4 pl-3 pr-4 shadow-lg"
   			>
-  				<div class="absolute top-0 right-7 w-4 h-4 float-left
-  							-mt-2 mr-5 border-gray-300 rotate-45
-  							bg-white rounded-sm border-t border-l">
+			  	<div class="absolute top-0 right-7 w-4 h-4 float-left
+					-mt-2 mr-5 border-gray-300 rotate-45
+					bg-white rounded-sm border-t border-l">
   				</div>
   				<div class="flex flex-col space-y-3 overflow-y-auto">
   					<div 

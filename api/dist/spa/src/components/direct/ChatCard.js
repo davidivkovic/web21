@@ -8,7 +8,7 @@ export default {
           :class="selected ? 'bg-gray-100' : 'hover:bg-gray-50'"
       >
           <img :src="convo.recipient.imageURL" alt="" class="w-14 h-14 rounded-full">
-          <div>
+          <div class="flex-1">
               <div 
                   :class="{ 'font-medium': convo.hasUnread }"
                   class="text-sm relative"
