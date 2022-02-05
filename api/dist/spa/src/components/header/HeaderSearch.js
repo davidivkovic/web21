@@ -119,7 +119,7 @@ export default {
     const dateEnabled = ref(false)
     const query = useDebouncedRef('', 200, true)
     const users = ref([])
-    const monthFrom = ref('1950-01-01')
+    const monthFrom = ref('1990-01-01')
     const monthTo = ref('2022-01-01')
     const sortBy = ref(sortOptions[0])
     let data
@@ -140,6 +140,7 @@ export default {
         if (!focused.value) focused.value = true
       } else {
         focused.value = false
+		query.value = ''
       }
     })
     return {

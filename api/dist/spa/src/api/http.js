@@ -27,6 +27,7 @@ instance.interceptors.response.use(
     if (error.response.status == 403 && error.response.data.type == 'banned') {
       setUser({})
       router.push('/')
+      router.go()
       return Promise.reject(error)
     }
 

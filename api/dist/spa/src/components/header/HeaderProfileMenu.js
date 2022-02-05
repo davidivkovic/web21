@@ -17,7 +17,7 @@ export default {
   			class="w-6 h-6 mt-0.5 rounded-full"
   			:class="{ 'outline outline-offset-1 outline-1': open }"
   		>
-  			<img :src="user.imageURL" alt="Profile picture" class="w-6 h-6 rounded-full" />
+  			<img :src="user.imageURL" alt="Profile picture" class="w-6 h-6 rounded-full object-cover" />
   		</MenuButton>
   
   		<transition
