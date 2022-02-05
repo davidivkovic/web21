@@ -7,7 +7,7 @@ export default {
           class="flex items-center space-x-2.5 px-5 py-2 cursor-pointer relative"
           :class="selected ? 'bg-gray-100' : 'hover:bg-gray-50'"
       >
-          <img :src="convo.recipient.imageURL" alt="" class="w-14 h-14 rounded-full">
+          <img :src="convo.recipient.imageURL" alt="" class="w-14 h-14 rounded-full object-cover">
           <div class="flex-1">
               <div 
                   :class="{ 'font-medium': convo.hasUnread }"

@@ -8,7 +8,7 @@ export default {
   	>
   		<div class="flex px-5 py-3 pr-6 items-center justify-between">
   			<div class="flex items-center justify-center space-x-3">
-  				<img :src="imageURL" alt="Profile picture" class="rounded-full w-11 h-11" />
+  				<img :src="imageURL" alt="Profile picture" class="rounded-full w-11 h-11 object-cover" />
   				<div>
   					<div class="font-medium">{{ username }}</div>
   					<div class="text-gray-500">{{ fullName }}</div>
