@@ -1,0 +1,19 @@
+{
+  "expires": "2022-05-05T00:30:24.422796",
+  "user": {
+    "username": "andrijanaa",
+    "password": "password123",
+    "email": "andrijanamartinovic@gmail.com",
+    "fullName": "Andrijana Matrinović",
+    "dateOfBirth": "1999-06-30",
+    "gender": "Female",
+    "role": "User",
+    "imageURL": "d9719667-3755-4335-a80c-ee222867d388",
+    "isPrivate": true,
+    "isBanned": false,
+    "id": "594d4489-0efc-4dc2-b0d7-d4dd559953a8",
+    "isActive": true
+  },
+  "id": "e17b6acf-5064-45b1-b14e-136f085df1fc",
+  "isActive": false
+}

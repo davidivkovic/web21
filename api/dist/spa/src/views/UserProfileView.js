@@ -126,7 +126,7 @@ export default {
   							{{ user.friendsCount == 1 ? 'friend' : 'friends'}}
   						</div>
   						<div 
-  							v-if="!isCurrentUser && (user.isFriend || !user.isPrivate)"
+  							v-if="isAuthenticated && !isCurrentUser && (user.isFriend || !user.isPrivate)"
   							@click="showMutuals()"
   							class="cursor-pointer"
   						>
@@ -202,7 +202,7 @@ export default {
         user.value = data
         isCurrentUser.value = user.value.username === currentUser.username
         showPosts.value =
-          isCurrentUser.value || user.value.isFriend || !user.value.isPrivate
+          currentUser.isAdmin || isCurrentUser.value || user.value.isFriend || !user.value.isPrivate
         friendRequestPending.value = user.value.friendRequest?.isPending
       }
     }

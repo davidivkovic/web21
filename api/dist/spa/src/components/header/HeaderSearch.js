@@ -80,7 +80,7 @@ export default {
   						<RouterLink @click.stop="focused=false" :to="{ name: 'profile', params: { username: user.username } }">
   							<div class="pl-4 pr-6 py-2 flex items-center justify-between space-x-3 hover:bg-gray-50 cursor-pointer">
   								<div class="flex items-center space-x-3">
-  									<img :src="user.imageURL" alt="Profile picture" class="rounded-full w-10 h-10">
+  									<img :src="user.imageURL" alt="Profile picture" class="rounded-full w-10 h-10 object-cover">
   									<div>
   										<div class="flex items-center space-x-1">
   												<div class="font-medium">{{ user.username }}</div>
