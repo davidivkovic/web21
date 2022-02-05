@@ -49,24 +49,9 @@ public class ChatController
     @OnClose
     public void onClose(Session session)
 	{
-		try 
-		{
-			String token = session.getQueryString().substring("token=".length());
-			Jws<Claims> jwt = tokenService.parseAccesToken(token);
-
-			if (jwt != null)
-			{
-				UUID userId = UUID.fromString(jwt.getBody().getSubject());
-				sessionToUsers.remove(session);
-				usersToSession.remove(userId);
-				
-				session.close();
-				return;
-			}
-		} catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
+        UUID userId = sessionToUsers.get(session);
+        sessionToUsers.remove(session);
+        usersToSession.remove(userId);
     }
 
     @OnError

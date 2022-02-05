@@ -131,6 +131,7 @@ ws.onmessage = async e => {
     if (data) {
       conversation = data.find(c => c.id == message.conversationId)
       conversation && conversations.unshift(conversation)
+      if (conversation.hasUnread) unreadCount.value++
     }
   }
 
