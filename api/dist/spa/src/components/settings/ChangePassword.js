@@ -25,15 +25,15 @@ export default {
   			</div>
   				<div class="flex space-x-10 items-center">
   					<aside class="w-1/4 font-medium">Old password</aside>
-  					<Input name="oldPassword" class="!bg-white flex-1 text-sm h-9"/>
+  					<Input type="password" name="oldPassword" class="!bg-white flex-1 text-sm h-9"/>
   				</div>
   					<div class="flex space-x-10 items-center">
   					<aside class="w-1/4 font-medium">New password</aside>
-  					<Input name="newPassword" class="!bg-white flex-1 text-sm h-9"/>
+  					<Input type="password" name="newPassword" class="!bg-white flex-1 text-sm h-9"/>
   				</div>
   					<div class="flex space-x-10 items-center">
   					<aside class="w-1/4 font-medium">Confirm new password</aside>
-  					<Input name="newPasswordAgain" class="!bg-white flex-1 text-sm h-9"/>
+  					<Input type="password" name="newPasswordAgain" class="!bg-white flex-1 text-sm h-9"/>
   				</div>
   				<div class="w-full flex justify-end">
   					<div class="w-3/4 pl-10" >

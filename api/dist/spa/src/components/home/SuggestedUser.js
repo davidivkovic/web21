@@ -7,7 +7,7 @@ export default {
   	<div class="flex justify-between items-start">
   		<div class="flex space-x-3 items-center">
   			<RouterLink :to="{ name: 'profile', params: { username: user.username } }">
-  				<img :src="user.imageURL" alt="Profile picture" class="w-8 h-8 rounded-full" />
+  				<img :src="user.imageURL" alt="Profile picture" class="w-8 h-8 rounded-full object-cover" />
   			</RouterLink>
   			<div>
   				<RouterLink :to="{ name: 'profile', params: { username: user.username } }">
