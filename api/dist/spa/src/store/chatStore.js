@@ -46,6 +46,7 @@ const setcurrentConversation = conversation => {
 
   if (conversation.messages.at(0)?.senderId != conversation.sender.id) {
     if (conversation.hasUnread) unreadCount.value--
+    conversation.messages.at(0)?.id &&
     seen(conversation.id, conversation.messages.at(0).id)
   }
 }
