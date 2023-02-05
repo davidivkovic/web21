@@ -13,14 +13,14 @@ Project developed during the university course WEB Programming, where Node.js is
 Since the project isn't compiled or bundled, Vue has to compile the templates into VDOM at runtime. This can cause the application to work slower than expected.
 
 # Showcase 📸
-![signin](https://i.ibb.co/6wk5kwx/localhost-8080-High-Resolution.png)
-![feed](https://i.ibb.co/Pm1sTwh/localhost-8080-direct-t-492ca1a9-67e6-4e4c-ae2f-98cf537f220c-High-Resolution-3.png)
-![profile](https://i.ibb.co/y5v3642/localhost-8080-direct-t-492ca1a9-67e6-4e4c-ae2f-98cf537f220c-High-Resolution-4.png)
-![friends](https://i.ibb.co/YWYKvwW/localhost-8080-ivan-gajic-High-Resolution-1.png)
-![remove-friends](https://i.ibb.co/DtsShRm/localhost-8080-ivanapetkovic-High-Resolution.png)
-![direct](https://i.ibb.co/xHZhx5G/localhost-8080-direct-t-492ca1a9-67e6-4e4c-ae2f-98cf537f220c-High-Resolution-1.png)
-![create](https://i.ibb.co/3C8Mc6m/localhost-8080-direct-t-492ca1a9-67e6-4e4c-ae2f-98cf537f220c-High-Resolution-2.png)
-![settings](https://i.ibb.co/hdF5zkd/localhost-8080-settings-High-Resolution.png)
+![signin](images/signin.png)
+![feed](images/feed.png)
+![profile](images/profile.png)
+![friends](images/friends.png)
+![remove-friends](images/removefriends.png)
+![direct](images/direct.png)
+![create](images/create.png)
+![settings](images/settings.png)
 
 # REST API 📝
 
